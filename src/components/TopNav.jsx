@@ -7,11 +7,11 @@ const items = [
   { label: 'Clients', to: '/clients', roles: ['Admin','Employé'] },
   { label: 'Commandes', to: '/orders', roles: ['Admin','Employé'] },
   { label: 'Ordonnances', to: '/prescriptions', roles: ['Admin','Employé'] },
-  { label: 'Fournisseurs', to: '/suppliers', roles: ['Admin'] },
-  { label: 'Montures', to: '/frames', roles: ['Admin'] },
-  { label: 'Lentilles', to: '/contacts', roles: ['Admin'] },
-  { label: 'Tarifs Verres', to: '/lens-pricing', roles: ['Admin'] },
-  { label: 'Utilisateurs', to: '/users', roles: ['Admin'] },
+  { label: 'Fournisseurs', to: '/suppliers', roles: ['Admin','Employé']  },
+  { label: 'Montures', to: '/frames', roles: ['Admin','Employé']  },
+  { label: 'Lentilles', to: '/contacts', roles: ['Admin','Employé']  },
+  { label: 'Tarifs Verres', to: '/lens-pricing', roles: ['Admin','Employé']  },
+ // { label: 'Utilisateurs', to: '/users', roles: ['Admin','Employé']  },
 ]
 
 export default function TopNav(){

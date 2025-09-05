@@ -1,9 +1,14 @@
 import { Routes, Route, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+
 import ProtectedRoute from './components/ProtectedRoute'
 import TopNav from './components/TopNav'
 import Topbar from './components/Topbar'
+import AddItemModal from './components/AddItemModal'
+import { AuthProvider } from './context/AuthContext'
 
 import Login from './pages/Login'
+import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import ResourcePage from './pages/ResourcePage'
 
@@ -16,9 +21,7 @@ import frames from './schemas/frames'
 import contacts from './schemas/contacts'
 import lensPricing from './schemas/lensPricing'
 
-import AddItemModal from './components/AddItemModal'
-import { useState } from 'react'
-
+// Layout wrapper
 function Layout({ children, onAddClick }) {
   return (
     <div className="flex">
@@ -40,7 +43,6 @@ export default function App() {
     setSelectedType(type)
     setAddOpen(false)
 
-    // navigate to the right page
     switch(type) {
       case 'clients': navigate('/clients'); break
       case 'users': navigate('/users'); break
@@ -55,15 +57,18 @@ export default function App() {
   }
 
   return (
-    <>
+    <AuthProvider>
       <AddItemModal open={addOpen} onClose={() => setAddOpen(false)} onSelect={handleAddSelect} />
 
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
         <Route path="/" element={
           <ProtectedRoute>
-            <Layout onAddClick={() => setAddOpen(true)}><Dashboard /></Layout>
+            <Layout onAddClick={() => setAddOpen(true)}>
+              <Dashboard />
+            </Layout>
           </ProtectedRoute>
         }/>
 
@@ -83,18 +88,18 @@ export default function App() {
           </ProtectedRoute>
         }/>
 
-        <Route path="/prescriptions" element={
-          <ProtectedRoute>
-            <Layout onAddClick={() => setAddOpen(true)}>
-              <ResourcePage schema={prescriptions} autoOpen={selectedType==='prescriptions'} onClose={()=>setSelectedType(null)} />
-            </Layout>
-          </ProtectedRoute>
-        }/>
-
         <Route path="/orders" element={
           <ProtectedRoute>
             <Layout onAddClick={() => setAddOpen(true)}>
               <ResourcePage schema={orders} autoOpen={selectedType==='orders'} onClose={()=>setSelectedType(null)} />
+            </Layout>
+          </ProtectedRoute>
+        }/>
+
+        <Route path="/prescriptions" element={
+          <ProtectedRoute>
+            <Layout onAddClick={() => setAddOpen(true)}>
+              <ResourcePage schema={prescriptions} autoOpen={selectedType==='prescriptions'} onClose={()=>setSelectedType(null)} />
             </Layout>
           </ProtectedRoute>
         }/>
@@ -131,6 +136,6 @@ export default function App() {
           </ProtectedRoute>
         }/>
       </Routes>
-    </>
+    </AuthProvider>
   )
 }

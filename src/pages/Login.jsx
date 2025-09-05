@@ -1,32 +1,59 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../store/auth'
+import { useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
+import { useNavigate } from "react-router-dom";
 
-export default function Login(){
-  const [email, setEmail] = useState('admin@example.com')
-  const [password, setPassword] = useState('password')
-  const [error, setError] = useState('')
-  const login = useAuth(s=>s.login)
-  const navigate = useNavigate()
+export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const submit = (e) => {
-    e.preventDefault()
-    const res = login({ email, password })
-    if (res.ok) navigate('/')
-    else setError(res.message)
-  }
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate("/"); // <-- HNA FIN KAYN L'MODIFICATION
+    } catch (err) {
+      alert(err.message);
+    }
+  };
 
   return (
-    <div className="min-h-screen grid place-items-center">
-      <form onSubmit={submit} className="card w-full max-w-md">
-        <h1 className="text-2xl font-semibold mb-4 text-center text-brand-600">OptiSIS Group - Login</h1>
-        <label className="label">Email</label>
-        <input className="input mb-3" value={email} onChange={e=>setEmail(e.target.value)} />
-        <label className="label">Mot de passe</label>
-        <input className="input mb-3" type="password" value={password} onChange={e=>setPassword(e.target.value)} />
-        {error && <div className="text-red-600 text-sm mb-3">{error}</div>}
-        <button className="btn btn-primary w-full">Se connecter</button>
+    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+      <form onSubmit={handleLogin} className="p-8 bg-white border rounded-xl shadow-md w-96">
+        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Login</h2>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+            Email
+          </label>
+          <input
+            id="email"
+            type="email"
+            placeholder="Email"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div className="mb-6">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            placeholder="Password"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
+          Login
+        </button>
       </form>
     </div>
-  )
+  );
 }
