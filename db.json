@@ -1,0 +1,71 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Admin",
+      "email": "admin@example.com",
+      "password": "password",
+      "role": "Admin"
+    },
+    {
+      "id": 2,
+      "name": "Employee",
+      "email": "employee@example.com",
+      "password": "secret",
+      "role": "Employé"
+    }
+  ],
+  "clients": [
+    {
+      "id": 1,
+      "firstName": "Mohamed",
+      "lastName": "El Idrissi",
+      "phone": "0612345678",
+      "email": "moh@example.com"
+    }
+  ],
+  "suppliers": [
+    {
+      "id": 1,
+      "name": "OptiFournisseur",
+      "phone": "0622334455"
+    }
+  ],
+  "frames": [
+    {
+      "id": 1,
+      "brand": "RayBan",
+      "ref": "RB123",
+      "sellPrice": 120
+    }
+  ],
+  "orders": [
+    {
+      "id": 1,
+      "orderNo": "CMD001",
+      "clientId": 1,
+      "orderDate": "2025-08-01",
+      "productType": "Monture",
+      "brand": "RayBan",
+      "ref": "RB123",
+      "supplierId": 1,
+      "buyPrice": 60,
+      "sellPrice": 120,
+      "deposit": 50,
+      "rest": 70,
+      "paymentStatus": "Acompte"
+    }
+  ],
+  "lensPricing": [
+    {
+      "id": 1,
+      "brand": "Essilor",
+      "vtype": "Progressif",
+      "material": "Organique",
+      "index": "1.6",
+      "coating": "Anti-reflet",
+      "buyPrice": 30,
+      "sellPrice": 80
+    }
+  ]
+}
