@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 const DashboardCharts = lazy(() => import('../components/DashboardCharts'));
 import { useDB } from '../store/db';
 import { useAuth } from "../context/AuthContext";
+import { Link } from 'react-router-dom';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -18,6 +19,13 @@ export default function Dashboard() {
   const frames = db.list('frames');
   const contacts = db.list('contacts');
   const tarifs = db.list('lensPricing');
+
+  const totalSales = orders.reduce((sum,o)=>sum+(Number(o.sellPrice)||0),0);
+  const collected = orders.reduce((sum,o)=>sum+(Number(o.deposit)||0),0);
+  const outstanding = orders.reduce((sum,o)=>sum+Math.max(0,(Number(o.sellPrice)||0)-(Number(o.deposit)||0)),0);
+  const grossMargin = orders.reduce((sum,o)=>sum+(Number(o.sellPrice)||0)-(Number(o.buyPrice)||0),0);
+  const lowStock = [...frames,...contacts].filter(p=>p.quantity!==undefined && Number(p.quantity)<=Number(p.minStock||0)).length;
+  const fmt = n => new Intl.NumberFormat('fr-FR',{maximumFractionDigits:0}).format(n)+' MAD';
 
   // Orders by status (Pie)
   const ordersByStatus = useMemo(() => {
@@ -83,6 +91,11 @@ export default function Dashboard() {
 
       </div>
 
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-5">
+        {[["Chiffre d’affaires",fmt(totalSales)],["Montant encaissé",fmt(collected)],["Reste à payer",fmt(outstanding)],["Marge brute estimée",fmt(grossMargin)]].map(([label,value])=><div key={label} className="bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-5 shadow-sm border dark:border-gray-700"><div className="text-sm text-gray-500 dark:text-gray-300">{label}</div><div className="text-xl sm:text-2xl font-bold text-blue-600 mt-2">{value}</div></div>)}
+      </div>
+      <div className="flex flex-wrap gap-3 items-center"><Link to="/suivi-commandes" className="bg-blue-600 text-white rounded-lg px-4 py-2 text-sm">Suivi commandes</Link><Link to="/fiches-clients" className="bg-white dark:bg-gray-800 dark:text-white border rounded-lg px-4 py-2 text-sm">Fiches clients</Link><Link to="/stock" className="bg-white dark:bg-gray-800 dark:text-white border rounded-lg px-4 py-2 text-sm">Gestion Stock · {lowStock} alerte(s)</Link></div>
+      <p className="text-xs text-gray-500">Données fictives · Marge brute indicative avant charges et taxes.</p>
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
         {counts.map(c => (
@@ -96,6 +109,7 @@ export default function Dashboard() {
       {/* Render charts after initial dashboard paint. */}
       {showCharts && <Suspense fallback={<div className="p-6 text-gray-500">Chargement des graphiques…</div>}><DashboardCharts ordersByStatus={ordersByStatus} stockPie={stockPie} clientSupplierData={clientSupplierData} /></Suspense>}
 
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4"><h3 className="text-lg font-semibold mb-3 text-gray-800 dark:text-white">Dernières commandes</h3><div className="overflow-x-auto"><table className="min-w-full text-sm"><thead><tr className="border-b text-left">{['N°','Date','Statut','Montant','Reste'].map(t=><th key={t} className="p-2">{t}</th>)}</tr></thead><tbody>{[...orders].sort((a,b)=>String(b.orderDate||'').localeCompare(String(a.orderDate||''))).slice(0,6).map(o=><tr key={o.id} className="border-b dark:border-gray-700"><td className="p-2">{o.orderNo}</td><td className="p-2">{o.orderDate}</td><td className="p-2">{o.workflowStatus||'Nouvelle'}</td><td className="p-2">{fmt(o.sellPrice)}</td><td className="p-2">{fmt(Math.max(0,(Number(o.sellPrice)||0)-(Number(o.deposit)||0)))}</td></tr>)}</tbody></table></div></div>
       {/* Client Summary Table */}
       <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg">
         <h3 className="font-semibold mb-4 text-lg text-gray-700 dark:text-gray-200">Résumé Clients</h3>
