@@ -29,7 +29,7 @@ export default function Dashboard() {
 
   const monthlySales = useMemo(()=>{
     const map = new Map();
-    orders.forEach(o=>{ const month=String(o.orderDate||'').slice(0,7); if(!/^\\d{4}-\\d{2}$/.test(month))return; map.set(month,(map.get(month)||0)+(Number(o.sellPrice)||0)) });
+    orders.forEach(o=>{ const month=String(o.orderDate||'').slice(0,7); if(!/^[0-9]{4}-[0-9]{2}$/.test(month))return; map.set(month,(map.get(month)||0)+(Number(o.sellPrice)||0)) });
     return [...map].sort(([a],[b])=>a.localeCompare(b)).slice(-6).map(([name,value])=>({name,value}));
   },[orders]);
 
