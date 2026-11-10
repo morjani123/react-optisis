@@ -88,22 +88,22 @@ export default function Dashboard() {
   }, [clients, orders]);
 
   return (
-    <div className="p-6 space-y-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <div className="p-3 sm:p-6 space-y-6 min-w-0 overflow-x-hidden bg-gray-50 dark:bg-gray-900 min-h-screen">
       {/* Welcome Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">
+      <div className="flex flex-wrap justify-between items-center gap-3 mb-6">
+        <h1 className="text-xl sm:text-3xl font-bold break-words text-gray-800 dark:text-gray-100">
           Bienvenue sur OptiSIS — {user?.name}
         </h1>
 
       </div>
 
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-5">
-        {[["Chiffre d’affaires",fmt(totalSales)],["Montant encaissé",fmt(collected)],["Reste à payer",fmt(outstanding)],["Marge brute estimée",fmt(grossMargin)]].map(([label,value])=><div key={label} className="bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-5 shadow-sm border dark:border-gray-700"><div className="text-sm text-gray-500 dark:text-gray-300">{label}</div><div className="text-xl sm:text-2xl font-bold text-blue-600 mt-2">{value}</div></div>)}
+        {[["Chiffre d’affaires",fmt(totalSales)],["Montant encaissé",fmt(collected)],["Reste à payer",fmt(outstanding)],["Marge brute estimée",fmt(grossMargin)]].map(([label,value])=><div key={label} className="bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-5 shadow-sm border dark:border-gray-700"><div className="text-sm text-gray-500 dark:text-gray-300">{label}</div><div className="text-base sm:text-2xl font-bold text-blue-600 mt-2 break-words">{value}</div></div>)}
       </div>
       <div className="flex flex-wrap gap-3 items-center"><Link to="/suivi-commandes" className="bg-blue-600 text-white rounded-lg px-4 py-2 text-sm">Suivi commandes</Link><Link to="/fiches-clients" className="bg-white dark:bg-gray-800 dark:text-white border rounded-lg px-4 py-2 text-sm">Fiches clients</Link><Link to="/stock" className="bg-white dark:bg-gray-800 dark:text-white border rounded-lg px-4 py-2 text-sm">Gestion Stock · {lowStock} alerte(s)</Link></div>
       <p className="text-xs text-gray-500">Données fictives · Marge brute indicative avant charges et taxes.</p>
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-6">
         {counts.map(c => (
           <div key={c.label} className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-lg transition-transform transform hover:scale-105">
             <div className="text-sm font-medium text-gray-500 dark:text-gray-400">{c.label}</div>
