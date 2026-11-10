@@ -1,4 +1,4 @@
-import { Routes, Route, useNavigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
 import ProtectedRoute from './components/ProtectedRoute'
@@ -7,8 +7,6 @@ import Topbar from './components/Topbar'
 import AddItemModal from './components/AddItemModal'
 import { AuthProvider } from './context/AuthContext'
 
-import Login from './pages/Login'
-import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import ResourcePage from './pages/ResourcePage'
 
@@ -61,8 +59,8 @@ export default function App() {
       <AddItemModal open={addOpen} onClose={() => setAddOpen(false)} onSelect={handleAddSelect} />
 
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Navigate to="/" replace />} />
+        <Route path="/register" element={<Navigate to="/" replace />} />
 
         <Route path="/" element={
           <ProtectedRoute>
