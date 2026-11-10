@@ -32,7 +32,7 @@ function readOrInit() {
     if (merged.orders === demo.orders) merged.orders = demo.orders.map(o => ({...o, clientId: remapClient(o.clientId)}))
     if (merged.prescriptions === demo.prescriptions) merged.prescriptions = demo.prescriptions.map(p => ({...p, clientId: remapClient(p.clientId)}))
   }
-  if (Array.isArray(merged.suppliers) && merged.suppliers.length && merged.suppliers !== demo.suppliers && merged.orders === demo.orders) {
+  if (Array.isArray(merged.suppliers) && merged.suppliers.length && merged.suppliers !== demo.suppliers && (!Array.isArray(existing.orders) || existing.orders.length === 0)) {
     merged.orders = merged.orders.map((o,i)=>({...o,supplierId:merged.suppliers[i%merged.suppliers.length].id}))
   }
   save(KEY, merged)
