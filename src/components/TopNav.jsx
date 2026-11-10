@@ -4,6 +4,9 @@ import { useState } from 'react'
 
 const items = [
   { label: 'Dashboard', to: '/', roles: ['Admin','Employé'] },
+  { label: 'Fiche Client 360°', to: '/fiches-clients', roles: ['Admin','Employé'] },
+  { label: 'Suivi commandes', to: '/suivi-commandes', roles: ['Admin','Employé'] },
+  { label: 'Gestion Stock', to: '/stock', roles: ['Admin','Employé'] },
   { label: 'Clients', to: '/clients', roles: ['Admin','Employé'] },
   { label: 'Commandes', to: '/orders', roles: ['Admin','Employé'] },
   { label: 'Ordonnances', to: '/prescriptions', roles: ['Admin','Employé'] },
