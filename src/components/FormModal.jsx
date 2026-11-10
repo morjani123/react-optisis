@@ -3,8 +3,8 @@ import { toast } from '../utils/notify'
 export default function FormModal({ open, title, children, onClose, onSave }) {
   if (!open) return null
   return (
-    <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl shadow-lg w-full max-w-lg">
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-3 sm:p-6">
+      <div className="bg-white rounded-xl shadow-lg w-full max-w-2xl max-h-[calc(100dvh-1.5rem)] flex flex-col overflow-hidden">
         <div className="p-4 border-b flex justify-between items-center">
           <h2 className="text-lg font-semibold">{title}</h2>
           <button
@@ -14,7 +14,7 @@ export default function FormModal({ open, title, children, onClose, onSave }) {
             ✕
           </button>
         </div>
-        <div className="p-4">{children}</div>
+        <div className="p-4 overflow-y-auto min-h-0">{children}</div>
         <div className="p-4 border-t flex justify-end gap-2">
           <button
             onClick={onClose}
