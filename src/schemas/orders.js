@@ -14,6 +14,7 @@ export default {
     { key: 'sellPrice', label: 'Prix de vente', type: 'number' },
     { key: 'deposit', label: 'Acompte', type: 'number' },
     { key: 'rest', label: 'Reste', type: 'number' },
+    { key: 'workflowStatus', label: 'Suivi commande', type: 'select', options: ['Nouvelle','En préparation','Prête','Livrée'] },
     { key: 'paymentStatus', label: 'Statut paiement', type: 'select', options: ['Payé','Acompte','Impayé'] }
   ],
   searchBy: ['orderNo','productType','brand','ref']
