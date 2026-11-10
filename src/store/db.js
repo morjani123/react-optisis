@@ -23,6 +23,18 @@ function readOrInit() {
     if (key === 'users') continue
     if (!Array.isArray(existing[key]) || existing[key].length === 0) merged[key] = demo[key]
   }
+  // Keep sample orders and prescriptions linked to the actual visible clients.
+  if (Array.isArray(merged.clients) && merged.clients.length && merged.clients !== demo.clients) {
+    const remapClient = id => {
+      const idx = demo.clients.findIndex(c => c.id === id)
+      return idx < 0 ? id : merged.clients[idx % merged.clients.length].id
+    }
+    if (merged.orders === demo.orders) merged.orders = demo.orders.map(o => ({...o, clientId: remapClient(o.clientId)}))
+    if (merged.prescriptions === demo.prescriptions) merged.prescriptions = demo.prescriptions.map(p => ({...p, clientId: remapClient(p.clientId)}))
+  }
+  if (Array.isArray(merged.suppliers) && merged.suppliers.length && merged.suppliers !== demo.suppliers && merged.orders === demo.orders) {
+    merged.orders = merged.orders.map((o,i)=>({...o,supplierId:merged.suppliers[i%merged.suppliers.length].id}))
+  }
   save(KEY, merged)
   localStorage.setItem('optisis_demo_seeded_v1', 'yes')
   return merged
