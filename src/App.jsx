@@ -9,6 +9,9 @@ import { AuthProvider } from './context/AuthContext'
 
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const ResourcePage = lazy(() => import('./pages/ResourcePage'))
+const OrdersWorkflow = lazy(() => import('./pages/OrdersWorkflow'))
+const ClientProfiles = lazy(() => import('./pages/ClientProfiles'))
+const Inventory = lazy(() => import('./pages/Inventory'))
 
 import clients from './schemas/clients'
 import users from './schemas/users'
@@ -70,6 +73,10 @@ export default function App() {
             </Layout>
           </ProtectedRoute>
         }/>
+
+        <Route path="/suivi-commandes" element={<Layout><OrdersWorkflow /></Layout>} />
+        <Route path="/fiches-clients" element={<Layout><ClientProfiles /></Layout>} />
+        <Route path="/stock" element={<Layout><Inventory /></Layout>} />
 
         <Route path="/clients" element={
           <ProtectedRoute>
