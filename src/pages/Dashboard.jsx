@@ -27,6 +27,12 @@ export default function Dashboard() {
   const lowStock = [...frames,...contacts].filter(p=>p.quantity!==undefined && Number(p.quantity)<=Number(p.minStock||0)).length;
   const fmt = n => new Intl.NumberFormat('fr-FR',{maximumFractionDigits:0}).format(n)+' MAD';
 
+  const monthlySales = useMemo(()=>{
+    const map = new Map();
+    orders.forEach(o=>{ const month=String(o.orderDate||'').slice(0,7); if(!/^\\d{4}-\\d{2}$/.test(month))return; map.set(month,(map.get(month)||0)+(Number(o.sellPrice)||0)) });
+    return [...map].sort(([a],[b])=>a.localeCompare(b)).slice(-6).map(([name,value])=>({name,value}));
+  },[orders]);
+
   // Orders by status (Pie)
   const ordersByStatus = useMemo(() => {
     const map = {};
@@ -107,7 +113,7 @@ export default function Dashboard() {
       </div>
 
       {/* Render charts after initial dashboard paint. */}
-      {showCharts && <Suspense fallback={<div className="p-6 text-gray-500">Chargement des graphiques…</div>}><DashboardCharts ordersByStatus={ordersByStatus} stockPie={stockPie} clientSupplierData={clientSupplierData} /></Suspense>}
+      {showCharts && <Suspense fallback={<div className="p-6 text-gray-500">Chargement des graphiques…</div>}><DashboardCharts ordersByStatus={ordersByStatus} stockPie={stockPie} clientSupplierData={clientSupplierData} monthlySales={monthlySales} /></Suspense>}
 
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4"><h3 className="text-lg font-semibold mb-3 text-gray-800 dark:text-white">Dernières commandes</h3><div className="overflow-x-auto"><table className="min-w-full text-sm"><thead><tr className="border-b text-left">{['N°','Date','Statut','Montant','Reste'].map(t=><th key={t} className="p-2">{t}</th>)}</tr></thead><tbody>{[...orders].sort((a,b)=>String(b.orderDate||'').localeCompare(String(a.orderDate||''))).slice(0,6).map(o=><tr key={o.id} className="border-b dark:border-gray-700"><td className="p-2">{o.orderNo}</td><td className="p-2">{o.orderDate}</td><td className="p-2">{o.workflowStatus||'Nouvelle'}</td><td className="p-2">{fmt(o.sellPrice)}</td><td className="p-2">{fmt(Math.max(0,(Number(o.sellPrice)||0)-(Number(o.deposit)||0)))}</td></tr>)}</tbody></table></div></div>
       {/* Client Summary Table */}
