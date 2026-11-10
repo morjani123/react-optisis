@@ -42,26 +42,55 @@ function readOrInit() {
   return merged
 }
 
+const number = value => Number.isFinite(Number(value)) ? Number(value) : 0
+const orderQty = order => Math.max(1, number(order?.quantity) || 1)
+const delivered = order => order?.workflowStatus === 'Livrée'
+const collectionFor = order => order?.productType === 'Lentilles' ? 'contacts' : order?.productType === 'Monture' || order?.productType === 'Solaire' ? 'frames' : null
+
+function adjustStock(db, order, direction) {
+  const col = collectionFor(order)
+  if (!col || !order?.ref || !Array.isArray(db[col])) return
+  db[col] = db[col].map(product => product.ref === order.ref && product.quantity !== undefined
+    ? { ...product, quantity: Math.max(0, number(product.quantity) + direction * orderQty(order)) }
+    : product)
+}
+function normalizeOrder(order) {
+  if (!order) return order
+  const sellPrice = Math.max(0, number(order.sellPrice))
+  const deposit = Math.min(sellPrice, Math.max(0, number(order.deposit)))
+  return { ...order, sellPrice, deposit, rest: sellPrice - deposit,
+    paymentStatus: deposit >= sellPrice && sellPrice > 0 ? 'Payé' : deposit > 0 ? 'Acompte' : 'Impayé',
+    workflowStatus: order.workflowStatus || 'Nouvelle' }
+}
+function commitDB(set, db) { set({ data: db }); save(KEY, db) }
+
 export const useDB = create((set, get) => ({
   data: readOrInit(),
-  reset: () => { const seed = initial(); save(KEY, seed); set({ data: seed }) },
+  reset: () => { const seed = initial(); save(KEY, seed); localStorage.setItem('optisis_demo_seeded_v2','yes'); set({ data: seed }) },
   list: (col) => get().data[col] ?? [],
   add: (col, item) => {
     const db = { ...get().data }
-    const entity = { id: uid(col.slice(0,3)+'_'), createdAt: nowISO(), ...item }
+    const entity = { id: uid(col.slice(0,3)+'_'), createdAt: nowISO(), ...(col === 'orders' ? normalizeOrder(item) : item) }
     db[col] = [entity, ...db[col]]
-    set({ data: db }); save(KEY, db)
+    if (col === 'orders' && delivered(entity)) adjustStock(db, entity, -1)
+    commitDB(set, db)
     return entity
   },
   update: (col, id, patch) => {
     const db = { ...get().data }
-    db[col] = db[col].map(r => r.id === id ? { ...r, ...patch, updatedAt: nowISO() } : r)
-    set({ data: db }); save(KEY, db)
+    const old = db[col].find(r => r.id === id)
+    const next = col === 'orders' ? normalizeOrder({ ...old, ...patch }) : { ...old, ...patch }
+    if (col === 'orders' && old && delivered(old)) adjustStock(db, old, 1)
+    db[col] = db[col].map(r => r.id === id ? { ...next, updatedAt: nowISO() } : r)
+    if (col === 'orders' && delivered(next)) adjustStock(db, next, -1)
+    commitDB(set, db)
   },
   remove: (col, id) => {
     const db = { ...get().data }
+    const old = db[col].find(r => r.id === id)
+    if (col === 'orders' && delivered(old)) adjustStock(db, old, 1)
     db[col] = db[col].filter(r => r.id !== id)
-    set({ data: db }); save(KEY, db)
+    commitDB(set, db)
   },
   find: (col, id) => (get().data[col]||[]).find(r=>r.id===id)
 }))
