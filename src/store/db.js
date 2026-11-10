@@ -15,6 +15,23 @@ function readOrInit() {
     localStorage.setItem(marker, 'yes')
     return seed
   }
+  // Add inventory fields to older browser demos without overwriting existing records.
+  const stockMarker = 'optisis_stock_v2'
+  if (localStorage.getItem(stockMarker) !== 'yes') {
+    const enhanced = { ...existing }
+    for (const col of ['frames','contacts']) {
+      if (!Array.isArray(existing[col])) continue
+      enhanced[col] = existing[col].map((p,i)=>({
+        ...p,
+        quantity: p.quantity ?? (col === 'frames' ? 6 + i * 2 : 8 + i * 3),
+        minStock: p.minStock ?? 4,
+        ...(col === 'contacts' && !p.ref ? {ref:'LEN-DEMO-'+String(i+1).padStart(3,'0')} : {})
+      }))
+    }
+    save(KEY,enhanced)
+    localStorage.setItem(stockMarker,'yes')
+    return enhanced
+  }
   if (localStorage.getItem(marker) === 'yes') return existing
 
   const demo = initial()
