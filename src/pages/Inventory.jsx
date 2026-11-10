@@ -17,7 +17,7 @@ export default function Inventory() {
     if(current+amount<0)return
     db.update(col,p.id,{quantity:current+amount})
   }
-  return <div className="p-4 sm:p-6 bg-gray-50 dark:bg-gray-900 min-h-screen space-y-5">
+  return <div className="p-3 sm:p-6 min-w-0 overflow-x-hidden bg-gray-50 dark:bg-gray-900 min-h-screen space-y-5">
     <div><h1 className="text-2xl font-bold text-gray-800 dark:text-white">Gestion de Stock</h1><p className="text-sm text-gray-500">Entrées, sorties, seuils et alertes · démonstration locale</p></div>
     <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">{[['Références',products.length],['Unités disponibles',products.reduce((a,p)=>a+(Number(p.quantity)||0),0)],['Sous stock minimum',low.length]].map(([k,v])=><div key={k} className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm"><div className="text-sm text-gray-500">{k}</div><div className="text-3xl font-bold text-blue-600">{v}</div></div>)}</div>
     <div className="flex flex-wrap items-center gap-4"><input className="border rounded-lg p-2 w-full sm:w-80" value={q} onChange={e=>setQ(e.target.value)} placeholder="Rechercher marque ou référence…" /><label className="text-sm text-gray-700 dark:text-gray-200 flex gap-2"><input type="checkbox" checked={onlyLow} onChange={e=>setOnlyLow(e.target.checked)}/> Alertes uniquement</label></div>
