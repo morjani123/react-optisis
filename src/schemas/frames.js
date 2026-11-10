@@ -5,6 +5,8 @@ export default {
     { key: 'ref', label: 'Référence', type: 'text', required: true },
     { key: 'brand', label: 'Marque', type: 'text' },
     { key: 'type', label: 'Type', type: 'select', options: ['Optique','Solaire'] },
+    { key: 'quantity', label: 'Stock disponible', type: 'number' },
+    { key: 'minStock', label: 'Stock minimum', type: 'number' },
     { key: 'buyPrice', label: "Prix d'achat", type: 'number' },
     { key: 'sellPrice', label: 'Prix de vente', type: 'number' }
   ],
