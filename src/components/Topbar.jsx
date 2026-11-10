@@ -34,16 +34,16 @@ export default function Topbar() {
   }
 
   return (
-    <header className="h-16 bg-white dark:bg-brand-900 flex items-center justify-between px-4 border-b dark:border-gray-700 sticky top-0 z-30 transition-colors">
+    <header className="min-h-16 bg-white dark:bg-brand-900 flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 px-3 sm:px-4 py-2 border-b dark:border-gray-700 sticky top-0 z-30 transition-colors">
       <div className="flex items-center space-x-3">
-        <div className="text-lg font-semibold text-gray-800 dark:text-white">OptiSIS Dashboard</div>
+        <div className="text-sm sm:text-lg font-semibold text-gray-800 dark:text-white whitespace-nowrap">OptiSIS Dashboard</div>
       </div>
 
-      <div className="flex items-center space-x-4">
+      <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-3 min-w-0">
         {/* Add Button */}
         <button
           onClick={() => setModalOpen(true)}
-          className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow"
+          className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow"
         >
           ➕ Ajouter
         </button>
@@ -58,7 +58,7 @@ export default function Topbar() {
         <button onClick={()=>{ if(window.confirm('Réinitialiser toutes les données locales avec les exemples fictifs ?')) resetDemo() }} className="text-xs sm:text-sm border border-gray-300 dark:border-gray-600 rounded-lg px-2 py-1.5 text-gray-700 dark:text-gray-200">Réinitialiser</button>
         {user && (
           <div className="flex items-center space-x-3">
-            <div className="text-sm text-gray-600 dark:text-gray-200">Mode Démo</div>
+            <div className="hidden xl:block text-sm text-gray-600 dark:text-gray-200">Mode Démo</div>
 
           </div>
         )}
