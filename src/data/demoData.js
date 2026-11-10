@@ -21,12 +21,12 @@ export function createDemoData() {
   const brands = ['Ray-Ban','Vogue','Carrera','Polaroid','Oakley','Guess','Hugo Boss','Persol','Lacoste','Tommy Hilfiger']
   const frames = brands.map((brand,i)=>({
     id:uid('fra_'),ref:'OPT-DEMO-'+String(i+1).padStart(3,'0'),brand,
-    type:i%3===0?'Solaire':'Optique',buyPrice:180+i*28,sellPrice:350+i*55,createdAt:stamp
+    type:i%3===0?'Solaire':'Optique',quantity:5+(i*3)%18,minStock:4,buyPrice:180+i*28,sellPrice:350+i*55,createdAt:stamp
   }))
   const contacts = ['Acuvue','Biofinity','Air Optix','Dailies','SofLens','PureVision'].map((brand,i)=>({
     id:uid('con_'),brand,subBrand:'Gamme Démo '+(i+1),ctype:i%2?'Toric':'Spheric',
     material:'Silicone hydrogel',duration:i%2?'Mensuelle':'Journalière',
-    buyPrice:90+i*18,sellPrice:160+i*30,createdAt:stamp
+    quantity:8+i*3,minStock:5,buyPrice:160+i*30,createdAt:stamp
   }))
   const lensPricing = ['Essilor','Zeiss','Hoya','Rodenstock','Nikon','Shamir'].map((brand,i)=>({
     id:uid('len_'),brand,vtype:i%2?'Progressif':'Unifocal',material:'Organique',
@@ -46,7 +46,7 @@ export function createDemoData() {
       readyDate:dateAgo(Math.max(0,i*2)),productType:['Monture','Verres','Lentilles','Solaire'][i%4],
       brand:brands[i%brands.length],ref:'OPT-DEMO-'+String(i%10+1).padStart(3,'0'),
       supplierId:suppliers[i%suppliers.length].id,buyPrice:Math.round(sellPrice*.55),
-      sellPrice,deposit,rest:sellPrice-deposit,paymentStatus,createdAt:stamp
+      sellPrice,deposit,rest:sellPrice-deposit,paymentStatus,workflowStatus:['Nouvelle','En préparation','Prête','Livrée'][i%4],quantity:1,createdAt:stamp
     }
   })
   const prescriptions = Array.from({length:9},(_,i)=>({
