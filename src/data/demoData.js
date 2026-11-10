@@ -24,7 +24,7 @@ export function createDemoData() {
     type:i%3===0?'Solaire':'Optique',quantity:5+(i*3)%18,minStock:4,buyPrice:180+i*28,sellPrice:350+i*55,createdAt:stamp
   }))
   const contacts = ['Acuvue','Biofinity','Air Optix','Dailies','SofLens','PureVision'].map((brand,i)=>({
-    id:uid('con_'),brand,subBrand:'Gamme Démo '+(i+1),ctype:i%2?'Toric':'Spheric',
+    id:uid('con_'),ref:'LEN-DEMO-'+String(i+1).padStart(3,'0'),brand,subBrand:'Gamme Démo '+(i+1),ctype:i%2?'Toric':'Spheric',
     material:'Silicone hydrogel',duration:i%2?'Mensuelle':'Journalière',
     quantity:8+i*3,minStock:5,buyPrice:160+i*30,createdAt:stamp
   }))
