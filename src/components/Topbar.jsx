@@ -4,7 +4,6 @@ import AddItemModal from './AddItemModal'
 
 export default function Topbar() {
   const user = useAuth(s => s.user)
-  const logout = useAuth(s => s.logout)
   const [dark, setDark] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
 
@@ -54,8 +53,8 @@ export default function Topbar() {
 
         {user && (
           <div className="flex items-center space-x-3">
-            <div className="text-sm text-gray-600 dark:text-gray-200">Welcome, {user?.name}</div>
-            <button onClick={logout} className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Logout</button>
+            <div className="text-sm text-gray-600 dark:text-gray-200">Mode Démo</div>
+
           </div>
         )}
       </div>
