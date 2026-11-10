@@ -18,7 +18,7 @@ export default function OrdersWorkflow() {
     return (stage==='Tous' || (o.workflowStatus||'Nouvelle')===stage) &&
       [o.orderNo,o.brand,o.ref,name].some(v=>String(v||'').toLowerCase().includes(query.toLowerCase()))
   }),[orders,clients,query,stage])
-  return <div className="p-4 sm:p-6 bg-gray-50 dark:bg-gray-900 min-h-screen space-y-5">
+  return <div className="p-3 sm:p-6 min-w-0 overflow-x-hidden bg-gray-50 dark:bg-gray-900 min-h-screen space-y-5">
     <div className="flex flex-wrap items-center justify-between gap-3">
       <div><h1 className="text-2xl font-bold text-gray-800 dark:text-white">Suivi des commandes</h1><p className="text-sm text-gray-500">Avancement de préparation et livraison · données de démonstration</p></div>
       <input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Rechercher commande ou client…" className="border rounded-lg p-2 w-full sm:w-72 text-gray-800" />
@@ -29,7 +29,7 @@ export default function OrdersWorkflow() {
     <div className="flex items-center gap-3"><select className="border p-2 rounded-lg text-gray-800" value={stage} onChange={e=>setStage(e.target.value)}><option>Tous</option>{stages.map(s=><option key={s}>{s}</option>)}</select><span className="text-sm text-gray-500">{filtered.length} commande(s)</span></div>
     <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">{filtered.map(o=>{
       const c=clients.find(x=>x.id===o.clientId)
-      return <div key={o.id} className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border dark:border-gray-700 space-y-3">
+      return <div key={o.id} className="bg-white dark:bg-gray-800 rounded-xl p-4 min-w-0 shadow-sm border dark:border-gray-700 space-y-3">
         <div className="flex justify-between gap-2"><strong className="text-gray-800 dark:text-white">{o.orderNo || o.id}</strong><span className={'rounded-full px-2 py-1 text-xs '+colors[stages.indexOf(o.workflowStatus||'Nouvelle')<0?0:stages.indexOf(o.workflowStatus||'Nouvelle')]}>{o.workflowStatus||'Nouvelle'}</span></div>
         <div className="text-sm text-gray-600 dark:text-gray-300">{[c?.firstName,c?.lastName].filter(Boolean).join(' ')||'Client'} · {o.brand||o.productType||'Optique'}</div>
         <div className="text-sm font-semibold text-gray-800 dark:text-gray-100">{amount(o.sellPrice)} · Reste {amount(o.rest)}</div>
