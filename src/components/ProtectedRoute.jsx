@@ -1,8 +1,4 @@
-import { Navigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-
+// Public demo only. Data is stored locally in each visitor's browser.
 export default function ProtectedRoute({ children }) {
-  const { user } = useAuth();
-  if (!user) return <Navigate to="/login" replace />;
-  return children;
+  return children
 }
