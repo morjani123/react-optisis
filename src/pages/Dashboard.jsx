@@ -1,13 +1,15 @@
-import { useMemo } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+const DashboardCharts = lazy(() => import('../components/DashboardCharts'));
 import { useDB } from '../store/db';
 import { useAuth } from "../context/AuthContext";
-import {
-  PieChart, Pie, Cell, ResponsiveContainer,
-  Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid
-} from 'recharts';
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const [showCharts, setShowCharts] = useState(false);
+  useEffect(() => {
+    const timer = window.setTimeout(() => setShowCharts(true), 400);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   const db = useDB();
   const clients = db.list('clients');
@@ -53,8 +55,8 @@ export default function Dashboard() {
   const clientSummary = useMemo(() => {
     return clients.map(c => {
       const clientOrders = orders.filter(o => o.clientId === c.id);
-      const nbOrdonnances = clientOrders.filter(o => o.type === 'ordonnance').length;
-      const nbCommandes = clientOrders.filter(o => o.type === 'commande').length;
+      const nbOrdonnances = db.list('prescriptions').filter(p => p.clientId === c.id).length;
+      const nbCommandes = clientOrders.length;
       const totalPaid = clientOrders.filter(o => o.paymentStatus === 'Payé').length;
       const totalUnpaid = clientOrders.filter(o => o.paymentStatus !== 'Payé').length;
 
@@ -91,62 +93,8 @@ export default function Dashboard() {
         ))}
       </div>
 
-      {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Commandes par statut */}
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg">
-          <h3 className="font-semibold mb-4 text-lg text-gray-700 dark:text-gray-200">Commandes par statut</h3>
-          <div style={{ height: '300px' }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie data={ordersByStatus} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} label>
-                  {ordersByStatus.map((entry, idx) => (
-                    <Cell key={`cell-${idx}`} fill={['#3b82f6', '#10b981', '#f59e0b', '#ef4444'][idx % 4]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Stock repartition (Donut) */}
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg">
-          <h3 className="font-semibold mb-4 text-lg text-gray-700 dark:text-gray-200">Répartition Stock</h3>
-          <div style={{ height: '300px' }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie data={stockPie} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={60} outerRadius={100} label>
-                  {stockPie.map((entry, idx) => (
-                    <Cell key={`cell-${idx}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Clients vs Fournisseurs (Bar) */}
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg">
-          <h3 className="font-semibold mb-4 text-lg text-gray-700 dark:text-gray-200">Clients vs Fournisseurs</h3>
-          <div style={{ height: '300px' }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={clientSupplierData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="value" fill="#8884d8">
-                  {clientSupplierData.map((entry, idx) => (
-                    <Cell key={`cell-${idx}`} fill={entry.color} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </div>
+      {/* Render charts after initial dashboard paint. */}
+      {showCharts && <Suspense fallback={<div className="p-6 text-gray-500">Chargement des graphiques…</div>}><DashboardCharts ordersByStatus={ordersByStatus} stockPie={stockPie} clientSupplierData={clientSupplierData} /></Suspense>}
 
       {/* Client Summary Table */}
       <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg">
