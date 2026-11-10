@@ -51,7 +51,7 @@ export default function DataTable({ schema, rows, onEdit, onDelete, filters = []
   }
 
   return (
-    <div className="card p-4 bg-white rounded-xl shadow">
+    <div className="card p-3 sm:p-4 bg-white dark:bg-gray-800 rounded-xl shadow min-w-0 max-w-full">
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-4">
         <input className="input border rounded px-2 py-1 max-w-xs" placeholder="Rechercher..." value={q} onChange={e=>setQ(e.target.value)} />
         <div className="flex items-center gap-2 flex-wrap">
@@ -65,8 +65,8 @@ export default function DataTable({ schema, rows, onEdit, onDelete, filters = []
         </div>
       </div>
 
-      <div className="overflow-auto">
-        <table className="min-w-full table-auto border-collapse">
+      <div className="w-full max-w-full overflow-x-auto">
+        <table className="min-w-[680px] w-full table-auto border-collapse">
           <thead>
             <tr className="bg-gray-100">
               {cols.map(c => <th key={c.key} className="py-2 pr-4 text-left">{c.label}</th>)}
