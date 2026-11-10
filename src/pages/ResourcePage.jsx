@@ -59,8 +59,8 @@ export default function ResourcePage({ schema }) {
     .map(c => ({ key: c.key, label: c.label, options: c.options }))
 
   return (
-    <div className="p-6 space-y-4">
-      <div className="flex items-center justify-between">
+    <div className="p-3 sm:p-6 space-y-4 min-w-0 overflow-x-hidden">
+      <div className="flex flex-wrap gap-3 items-center justify-between">
         <h1 className="text-2xl font-semibold">{schema.title}</h1>
         <button className="btn btn-primary" onClick={openAdd}>Ajouter</button>
       </div>
