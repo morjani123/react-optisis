@@ -7,6 +7,8 @@ export default {
     { key: 'ctype', label: 'Type', type: 'select', options: ['Toric','Spheric'] },
     { key: 'material', label: 'Matériau', type: 'text' },
     { key: 'duration', label: 'Durée de port', type: 'text' },
+    { key: 'quantity', label: 'Stock disponible', type: 'number' },
+    { key: 'minStock', label: 'Stock minimum', type: 'number' },
     { key: 'buyPrice', label: "Prix d'achat (unité/boîte)", type: 'number' },
     { key: 'sellPrice', label: 'Prix de vente (unité/boîte)', type: 'number' }
   ],
