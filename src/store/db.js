@@ -8,35 +8,37 @@ const initial = () => createDemoData()
 
 function readOrInit() {
   const existing = load(KEY, null)
+  const marker = 'optisis_demo_seeded_v2'
   if (!existing || typeof existing !== 'object' || Array.isArray(existing)) {
     const seed = initial()
     save(KEY, seed)
+    localStorage.setItem(marker, 'yes')
     return seed
   }
-  // Preserve every existing record. Fill only empty collections with demo data.
-  // Avoid reseeding when a visitor intentionally clears a collection later.
-  const seeded = localStorage.getItem('optisis_demo_seeded_v1') === 'yes'
-  if (seeded) return existing
+  if (localStorage.getItem(marker) === 'yes') return existing
+
   const demo = initial()
   const merged = { ...demo, ...existing }
+  const clients = Array.isArray(existing.clients) && existing.clients.length ? existing.clients : demo.clients
+  const suppliers = Array.isArray(existing.suppliers) && existing.suppliers.length ? existing.suppliers : demo.suppliers
+  // Keep existing records, add demo records only to previously empty collections.
   for (const key of Object.keys(demo)) {
     if (key === 'users') continue
     if (!Array.isArray(existing[key]) || existing[key].length === 0) merged[key] = demo[key]
   }
-  // Keep sample orders and prescriptions linked to the actual visible clients.
-  if (Array.isArray(merged.clients) && merged.clients.length && merged.clients !== demo.clients) {
-    const remapClient = id => {
-      const idx = demo.clients.findIndex(c => c.id === id)
-      return idx < 0 ? id : merged.clients[idx % merged.clients.length].id
-    }
-    if (merged.orders === demo.orders) merged.orders = demo.orders.map(o => ({...o, clientId: remapClient(o.clientId)}))
-    if (merged.prescriptions === demo.prescriptions) merged.prescriptions = demo.prescriptions.map(p => ({...p, clientId: remapClient(p.clientId)}))
+  if (!Array.isArray(existing.orders) || existing.orders.length === 0) {
+    merged.orders = demo.orders.map((o,i) => ({
+      ...o, clientId: clients[i % clients.length].id,
+      supplierId: suppliers[i % suppliers.length].id
+    }))
   }
-  if (Array.isArray(merged.suppliers) && merged.suppliers.length && merged.suppliers !== demo.suppliers && (!Array.isArray(existing.orders) || existing.orders.length === 0)) {
-    merged.orders = merged.orders.map((o,i)=>({...o,supplierId:merged.suppliers[i%merged.suppliers.length].id}))
+  if (!Array.isArray(existing.prescriptions) || existing.prescriptions.length === 0) {
+    merged.prescriptions = demo.prescriptions.map((p,i) => ({
+      ...p, clientId: clients[i % clients.length].id
+    }))
   }
   save(KEY, merged)
-  localStorage.setItem('optisis_demo_seeded_v1', 'yes')
+  localStorage.setItem(marker, 'yes')
   return merged
 }
 
