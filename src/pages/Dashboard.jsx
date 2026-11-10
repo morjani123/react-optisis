@@ -1,15 +1,13 @@
 import { useMemo } from 'react';
 import { useDB } from '../store/db';
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from 'react-router-dom'; // <-- 1. Zedt l'importation dyal useNavigate
 import {
   PieChart, Pie, Cell, ResponsiveContainer,
   Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid
 } from 'recharts';
 
 export default function Dashboard() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate(); // <-- 2. Khdina l'fonction navigate
+  const { user } = useAuth();
 
   const db = useDB();
   const clients = db.list('clients');
@@ -73,29 +71,14 @@ export default function Dashboard() {
     });
   }, [clients, orders]);
 
-  // 3. Drna fonction jdida l logout
-  const handleLogout = async () => {
-    try {
-      await logout();
-      navigate('/'); // <-- Mli ydir logout y'redirectih l '/'
-    } catch (error) {
-      console.error("Failed to log out", error);
-    }
-  };
-
   return (
     <div className="p-6 space-y-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
       {/* Welcome Header */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">
-          Welcome, {user?.email}
+          Bienvenue sur OptiSIS — {user?.name}
         </h1>
-        <button
-          onClick={handleLogout} // <-- 4. كنعيطو ل fonction jdida hna
-          className="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-300 ease-in-out"
-        >
-          Logout
-        </button>
+
       </div>
 
       {/* Summary Cards */}
