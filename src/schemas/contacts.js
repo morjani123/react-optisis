@@ -2,6 +2,7 @@ export default {
   key: 'contacts',
   title: 'Lentilles de contact',
   columns: [
+    { key: 'ref', label: 'Référence stock', type: 'text' },
     { key: 'brand', label: 'Marque principale', type: 'text', required: true },
     { key: 'subBrand', label: 'Sous-marque', type: 'text' },
     { key: 'ctype', label: 'Type', type: 'select', options: ['Toric','Spheric'] },
