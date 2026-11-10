@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../store/auth'
 import AddItemModal from './AddItemModal'
+import { useDB } from '../store/db'
 
 export default function Topbar() {
   const user = useAuth(s => s.user)
+  const resetDemo = useDB(s => s.reset)
+  const [showInfo, setShowInfo] = useState(false)
   const [dark, setDark] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
 
@@ -51,6 +54,8 @@ export default function Topbar() {
           <span className={"bg-white w-4 h-4 rounded-full shadow-md transform duration-300 " + (dark ? "translate-x-6 bg-yellow-400" : "translate-x-0")} />
         </button>
 
+        <button onClick={()=>setShowInfo(!showInfo)} className="text-xs sm:text-sm bg-blue-50 text-blue-700 border border-blue-200 rounded-lg px-2 py-1.5" title="À propos de la démonstration">Démo ⓘ</button>
+        <button onClick={()=>{ if(window.confirm('Réinitialiser toutes les données locales avec les exemples fictifs ?')) resetDemo() }} className="text-xs sm:text-sm border border-gray-300 dark:border-gray-600 rounded-lg px-2 py-1.5 text-gray-700 dark:text-gray-200">Réinitialiser</button>
         {user && (
           <div className="flex items-center space-x-3">
             <div className="text-sm text-gray-600 dark:text-gray-200">Mode Démo</div>
@@ -58,6 +63,7 @@ export default function Topbar() {
           </div>
         )}
       </div>
+      {showInfo && <div className="absolute top-16 right-3 max-w-sm bg-white dark:bg-gray-800 dark:text-white border dark:border-gray-700 shadow-xl rounded-xl p-4 text-sm z-50"><strong>Mode démonstration public</strong><p className="mt-2">Tous les clients et ordonnances présentés sont fictifs. Vos modifications restent dans ce navigateur. N'ajoutez aucune donnée personnelle réelle.</p><button className="mt-3 text-blue-600" onClick={()=>setShowInfo(false)}>Compris</button></div>}
     </header>
   )
 }
