@@ -1,25 +1,31 @@
 import { create } from 'zustand'
 import { load, save, uid, nowISO } from '../utils/storage'
+import { createDemoData } from '../data/demoData'
 
 const KEY = 'optisis_db_v3'
 
-const initial = () => ({
-  clients: [
-    { id: uid('cli_'), firstName: 'Youssef', lastName: 'Amrani', phone: '0612345678', address: 'Fès', gender: 'Homme', age: 29, email: 'y.amrani@example.com', createdAt: nowISO() },
-    { id: uid('cli_'), firstName: 'Sara', lastName: 'El Idrissi', phone: '0687654321', address: 'Rabat', gender: 'Femme', age: 34, email: '' , createdAt: nowISO() }
-  ],
-  users: [
-    { id: uid('usr_'), name: 'Admin', email: 'admin@example.com', role: 'Admin', password: 'password' }
-  ],
-  prescriptions: [], orders: [], suppliers: [], frames: [], contacts: [], lensPricing: []
-})
+const initial = () => createDemoData()
 
-function readOrInit(){
+function readOrInit() {
   const existing = load(KEY, null)
-  if(existing) return existing
-  const seed = initial()
-  save(KEY, seed)
-  return seed
+  if (!existing || typeof existing !== 'object' || Array.isArray(existing)) {
+    const seed = initial()
+    save(KEY, seed)
+    return seed
+  }
+  // Preserve every existing record. Fill only empty collections with demo data.
+  // Avoid reseeding when a visitor intentionally clears a collection later.
+  const seeded = localStorage.getItem('optisis_demo_seeded_v1') === 'yes'
+  if (seeded) return existing
+  const demo = initial()
+  const merged = { ...demo, ...existing }
+  for (const key of Object.keys(demo)) {
+    if (key === 'users') continue
+    if (!Array.isArray(existing[key]) || existing[key].length === 0) merged[key] = demo[key]
+  }
+  save(KEY, merged)
+  localStorage.setItem('optisis_demo_seeded_v1', 'yes')
+  return merged
 }
 
 export const useDB = create((set, get) => ({
