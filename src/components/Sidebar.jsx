@@ -12,7 +12,6 @@ const sections = [
 ]
 
 export default function Sidebar(){
-  const logout = useAuth(s=>s.logout)
   const sidebarOpen = useUI(s=>s.sidebarOpen)
   const closeSidebar = useUI(s=>s.closeSidebar)
 
@@ -40,9 +39,6 @@ export default function Sidebar(){
             </div>
           ))}
         </nav>
-        <div className="px-4 py-4 mt-auto">
-          <button onClick={logout} className="btn btn-outline w-full">Logout</button>
-        </div>
       </aside>
     </Fragment>
   )
