@@ -1,7 +1,8 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts'
 
-export default function DashboardCharts({ ordersByStatus, stockPie, clientSupplierData }) {
+export default function DashboardCharts({ ordersByStatus, stockPie, clientSupplierData, monthlySales = [] }) {
   return (
+    <div className="space-y-6">
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Commandes par statut */}
         <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg">
@@ -57,6 +58,8 @@ export default function DashboardCharts({ ordersByStatus, stockPie, clientSuppli
           </div>
         </div>
 
+    </div>
+    <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm"><h3 className="font-semibold text-lg mb-4 text-gray-700 dark:text-gray-200">Ventes mensuelles (MAD)</h3><div style={{height:270}}><ResponsiveContainer width="100%" height="100%"><BarChart data={monthlySales}><CartesianGrid strokeDasharray="3 3"/><XAxis dataKey="name"/><YAxis/><Tooltip/><Bar dataKey="value" name="Ventes" fill="#2563eb" radius={[5,5,0,0]}/></BarChart></ResponsiveContainer></div></div>
     </div>
   )
 }
