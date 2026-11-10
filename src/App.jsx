@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 
 import ProtectedRoute from './components/ProtectedRoute'
 import TopNav from './components/TopNav'
@@ -7,8 +7,8 @@ import Topbar from './components/Topbar'
 import AddItemModal from './components/AddItemModal'
 import { AuthProvider } from './context/AuthContext'
 
-import Dashboard from './pages/Dashboard'
-import ResourcePage from './pages/ResourcePage'
+const Dashboard = lazy(() => import('./pages/Dashboard'))
+const ResourcePage = lazy(() => import('./pages/ResourcePage'))
 
 import clients from './schemas/clients'
 import users from './schemas/users'
@@ -58,6 +58,7 @@ export default function App() {
     <AuthProvider>
       <AddItemModal open={addOpen} onClose={() => setAddOpen(false)} onSelect={handleAddSelect} />
 
+      <Suspense fallback={<div className="min-h-[50vh] flex items-center justify-center text-gray-600 dark:text-gray-300" role="status">Chargement du module…</div>}>
       <Routes>
         <Route path="/login" element={<Navigate to="/" replace />} />
         <Route path="/register" element={<Navigate to="/" replace />} />
@@ -134,6 +135,7 @@ export default function App() {
           </ProtectedRoute>
         }/>
       </Routes>
+      </Suspense>
     </AuthProvider>
   )
 }
