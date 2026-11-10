@@ -1,28 +1,14 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "../firebase";
+import { createContext, useContext } from 'react'
 
-const AuthContext = createContext();
+const AuthContext = createContext(null)
+const DEMO_USER = { id: 'demo_visitor', name: 'Visiteur Démo', email: 'demo@optisis.local', role: 'Admin' }
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user || null);
-      setLoading(false);
-    });
-    return () => unsubscribe();
-  }, []);
-
-  const logout = () => signOut(auth);
-
+export function AuthProvider({ children }) {
   return (
-    <AuthContext.Provider value={{ user, logout }}>
-      {!loading && children}
+    <AuthContext.Provider value={{ user: DEMO_USER, logout: () => {} }}>
+      {children}
     </AuthContext.Provider>
-  );
-};
+  )
+}
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => useContext(AuthContext)
