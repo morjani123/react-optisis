@@ -4,16 +4,16 @@
 @tailwind components;
 @tailwind utilities;
 :root{
-  --brand-50: #f0f9ff;
-  --brand-100: #e0f2fe;
-  --brand-200: #bae6fd;
-  --brand-300: #7dd3fc;
-  --brand-400: #38bdf8;
-  --brand-500: #0ea5e9;
-  --brand-600: #0284c7;
-  --brand-700: #0369a1;
-  --brand-800: #075985;
-  --brand-900: #0c4a6e;
+  --brand-50: #E7F5F1;
+  --brand-100: #D3EEE7;
+  --brand-200: #A8DDD2;
+  --brand-300: #79CDBD;
+  --brand-400: #42B8A6;
+  --brand-500: #167D72;
+  --brand-600: #12685F;
+  --brand-700: #10554E;
+  --brand-800: #103B35;
+  --brand-900: #092A26;
 }
 
 
@@ -54,11 +54,11 @@
 
 /* Dark mode variables */
 :root.dark {
-  --bg: #0b1220;
-  --card: #0f1724;
+  --bg: #081F1D;
+  --card: #102C29;
   --text: #e6eef8;
   --muted: #94a3b8;
-  --brand-100: #062f4a;
+  --brand-100: #153F38;
 }
 
 /* Override basic elements in dark mode */
@@ -67,10 +67,10 @@
 .dark .text-gray-700 { color: var(--text); }
 .dark .text-gray-500 { color: var(--muted); }
 .dark .border-b { border-color: rgba(255,255,255,0.06); }
-.dark .input { background: #0b1220; border-color: rgba(255,255,255,0.06); color: var(--text); }
+.dark .input { background: #081F1D; border-color: rgba(255,255,255,0.06); color: var(--text); }
 .dark .btn { background: rgba(255,255,255,0.03); color: var(--text); border-color: rgba(255,255,255,0.06); }
-.dark .btn-primary { background: #0ea5e9; color: #041523; }
-.dark .nav-dark { background: #06131f; }
+.dark .btn-primary { background: #167D72; color: #041523; }
+.dark .nav-dark { background: #082622; }
 
 
 /* Dark mode table styles */
@@ -116,3 +116,9 @@
 .dark nav div a:hover {
     color: #ef4444;
 }
+/* Emerald Vision — accessible contrast for the two visual themes */
+:root{color-scheme:light;accent-color:#167D72}
+:root.dark{color-scheme:dark;--bg:#081F1D;--card:#102C29;--text:#E9F6F2;--muted:#A8C5BE}
+:root.dark .btn-primary{background:#2CB7A5;color:#062D28}
+:root.dark .nav-dark{background:#092A26}
+:focus-visible{outline:2px solid #2CB7A5;outline-offset:2px}
