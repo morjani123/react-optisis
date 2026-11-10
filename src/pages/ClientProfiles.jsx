@@ -30,10 +30,10 @@ export default function ClientProfiles() {
     autoTable(pdf,{startY:78,head:[['Commande','Date','Produit','Montant','Verse']],body:history.map(o=>[o.orderNo||'-',o.orderDate||'-',o.productType||'-',money(o.sellPrice),money(o.deposit)])})
     pdf.save('fiche-client-demo.pdf')
   }
-  return <div className="p-4 sm:p-6 bg-gray-50 dark:bg-gray-900 min-h-screen space-y-5">
+  return <div className="p-3 sm:p-6 min-w-0 overflow-x-hidden bg-gray-50 dark:bg-gray-900 min-h-screen space-y-5">
     <div><h1 className="text-2xl font-bold text-gray-800 dark:text-white">Fiche Client 360°</h1><p className="text-gray-500 text-sm">Achats, paiements et ordonnances au même endroit</p></div>
     <input value={search} onChange={e=>{setSearch(e.target.value);setSelected('')}} placeholder="Rechercher un client…" className="border p-3 rounded-lg w-full max-w-lg" />
-    <div className="grid lg:grid-cols-[270px_1fr] gap-4">
+    <div className="grid lg:grid-cols-[270px_minmax(0,1fr)] gap-4 min-w-0">
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-3 max-h-[480px] overflow-auto space-y-1">{matches.map(c=><button key={c.id} onClick={()=>setSelected(c.id)} className={'w-full text-left rounded-lg p-3 text-sm '+(client?.id===c.id?'bg-blue-100 text-blue-900':'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700')}>{c.firstName} {c.lastName}<div className="text-xs opacity-70">{c.phone}</div></button>)}</div>
       {client?<div className="space-y-4">
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5 flex flex-wrap items-center justify-between gap-3"><div><h2 className="text-xl font-bold text-gray-800 dark:text-white">{client.firstName} {client.lastName}</h2><p className="text-sm text-gray-500">{client.phone} · {client.address}</p></div><button onClick={exportPDF} className="bg-blue-600 text-white px-4 py-2 rounded-lg">Exporter fiche PDF</button></div>
