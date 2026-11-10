@@ -26,7 +26,7 @@ import lensPricing from './schemas/lensPricing'
 function Layout({ children, onAddClick }) {
   return (
     <div className="flex">
-      <div className="flex-1 min-h-screen bg-gray-50">
+      <div className="flex-1 min-w-0 min-h-screen bg-gray-50 dark:bg-gray-900 overflow-x-clip">
         <Topbar onAddClick={onAddClick} />
         <TopNav />
         {children}
