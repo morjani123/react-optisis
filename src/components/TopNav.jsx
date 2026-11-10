@@ -23,8 +23,8 @@ export default function TopNav(){
   const [open, setOpen] = useState(false)
 
   return (
-    <nav className="bg-white dark:bg-brand-800 border-b dark:border-gray-700 sticky top-16 z-20 transition-colors">
-      <div className="max-w-screen-2xl mx-auto px-4">
+    <nav className="bg-white dark:bg-brand-800 border-b dark:border-gray-700 relative sm:sticky sm:top-16 z-20 transition-colors">
+      <div className="max-w-screen-2xl mx-auto px-3 sm:px-4 min-w-0">
         {/* Mobile button */}
         <div className="sm:hidden flex justify-between items-center py-2">
           <span className="text-gray-800 dark:text-white font-medium">Menu</span>
@@ -36,12 +36,13 @@ export default function TopNav(){
         </div>
 
         {/* Menu items */}
-        <div className={(open ? 'block' : 'hidden') + " sm:flex gap-2 overflow-x-auto no-scrollbar py-2"}>
+        <div className={(open ? 'flex' : 'hidden') + " flex-col sm:flex sm:flex-row gap-1 sm:gap-2 sm:overflow-x-auto no-scrollbar py-2 min-w-0"}>
           {visible.map(i => (
             <NavLink
               key={i.to}
               to={i.to}
               end={i.to === '/'}
+              onClick={()=>setOpen(false)}
               className={({isActive})=>
                 'px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition ' +
                 (isActive ? 'bg-brand-100 text-brand-700 dark:bg-brand-600 dark:text-white border border-brand-200 dark:border-brand-500' : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200')
